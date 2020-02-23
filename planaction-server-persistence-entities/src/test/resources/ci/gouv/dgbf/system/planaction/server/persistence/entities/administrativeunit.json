@@ -1,0 +1,12 @@
+[
+  {
+    "uuid": "1",
+    "code": "22010001",
+    "name": "Cabinet du premier ministre"
+  },
+  {
+    "uuid": "2",
+    "code": "22010002",
+    "name": "Cabinet du ministre de l'agriculture"
+  }
+]

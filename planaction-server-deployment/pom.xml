@@ -33,5 +33,23 @@
 			<version>0.1.0</version>
 		</dependency>
 	</dependencies>		
-
+	
+	<profiles>
+		<profile>
+			<id>deployment.common</id>
+			<properties>
+				<cyk.variable.system.name>Module de gestion de plans d'actions</cyk.variable.system.name>
+				<cyk.variable.system.version>0.1</cyk.variable.system.version>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>deployment.data.base.oracle.development</id>
+			<properties>
+				<data.source.user>planaction</data.source.user>
+				<data.source.password>planaction</data.source.password>
+			</properties>
+		</profile>
+	</profiles>
+	
 </project>

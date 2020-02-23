@@ -7,7 +7,7 @@ public class PersistenceIntegrationTest extends AbstractPersistenceArquillianInt
 	private static final long serialVersionUID = 1L;
 	
 	@Test
-	public void test() throws Exception{
+	public void actionPlan_tableIdentifierIsIdentifiant() throws Exception{
 		
 	}
 	
