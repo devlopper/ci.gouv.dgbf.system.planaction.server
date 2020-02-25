@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.cyk.utility.__kernel__.object.__static__.persistence.AbstractIdentifiableSystemScalarStringBoundedContextIdentifiableBusinessStringNamableImpl;
+import org.cyk.utility.__kernel__.object.__static__.persistence.AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true) @NoArgsConstructor
 @Entity @Table(name=Activity.TABLE_NAME)
-public class Activity extends AbstractIdentifiableSystemScalarStringBoundedContextIdentifiableBusinessStringNamableImpl implements Serializable {
+public class Activity extends AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
