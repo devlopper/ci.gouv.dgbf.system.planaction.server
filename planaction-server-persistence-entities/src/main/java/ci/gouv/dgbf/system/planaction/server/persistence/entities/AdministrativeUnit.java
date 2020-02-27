@@ -22,5 +22,15 @@ public class AdministrativeUnit extends AbstractIdentifiableSystemScalarStringId
 		return (AdministrativeUnit) super.setIdentifier(identifier);
 	}
 	
+	@Override
+	public AdministrativeUnit setCode(String code) {
+		return (AdministrativeUnit) super.setCode(code);
+	}
+	
+	@Override
+	public AdministrativeUnit setName(String name) {
+		return (AdministrativeUnit) super.setName(name);
+	}
+	
 	public static final String TABLE_NAME = "ua";	
 }

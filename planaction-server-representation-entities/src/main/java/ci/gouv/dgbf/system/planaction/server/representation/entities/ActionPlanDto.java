@@ -14,8 +14,8 @@ public class ActionPlanDto extends AbstractIdentifiableSystemScalarStringIdentif
 	private static final long serialVersionUID = 1L;
 	
 	private AdministrativeUnitDto administrativeUnit;
-	private String year;
-	private String version;
+	private Short year;
+	private Byte orderNumber;
 	
 	@Override
 	public ActionPlanDto setIdentifier(String identifier) {
