@@ -7,7 +7,9 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.cyk.utility.__kernel__.AbstractApplicationScopeLifeCycleListener;
 import org.cyk.utility.__kernel__.klass.PersistableClassesGetter;
+import org.cyk.utility.__kernel__.persistence.query.QueryHelper;
 
+import ci.gouv.dgbf.system.planaction.server.persistence.api.AdministrativeUnitPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
@@ -18,6 +20,8 @@ public class ApplicationScopeLifeCycleListener extends AbstractApplicationScopeL
 
 	@Override
 	public void __initialize__(Object object) {
+		__inject__(ApplicationScopeLifeCycleListener.class).initialise();
+		QueryHelper.scan(List.of(AdministrativeUnitPersistence.class.getPackage()));	
 		PersistableClassesGetter.COLLECTION.set(List.of(ActionPlan.class,Activity.class,AdministrativeUnit.class));
 		__inject__(org.cyk.utility.server.persistence.impl.ApplicationScopeLifeCycleListener.class).initialize(null);
 		__inject__(ci.gouv.dgbf.system.planaction.server.persistence.entities.ApplicationScopeLifeCycleListener.class).initialize(null);
