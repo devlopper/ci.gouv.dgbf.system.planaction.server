@@ -36,7 +36,6 @@ public class ActivityPersistenceImpl extends AbstractPersistenceEntityImpl<Activ
 				List<String> activityTokens = queryContext.getFieldValueLikes("activity",5);
 				objects = new Object[] {activityTokens.get(0),activityTokens.get(0),activityTokens.get(1),activityTokens.get(2)
 						,activityTokens.get(3),activityTokens.get(4),queryContext.getStringLike(Activity.FIELD_ADMINISTRATIVE_UNIT)};
-				//System.out.println("AdministrativeUnitPersistenceImpl.__getQueryParameters__() : "+Arrays.deepToString(objects));
 			}
 			int index = 0;
 			objects = new Object[]{"activity",objects[index++],"activityName",objects[index++]
