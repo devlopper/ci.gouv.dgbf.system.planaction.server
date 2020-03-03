@@ -34,6 +34,9 @@ public class Activity extends AbstractIdentifiableSystemScalarStringIdentifiable
 	@ManyToOne @JoinColumn(name = COLUMN_ADMINISTRATIVE_UNIT) @NotNull private AdministrativeUnit administrativeUnit;
 	
 	@Transient private String activity;
+	@Transient private String actionPlanCode;
+	@Transient private String administrativeUnitCode;
+	@Transient private String administrativeUnitsCodes;
 	
 	/**/
 	

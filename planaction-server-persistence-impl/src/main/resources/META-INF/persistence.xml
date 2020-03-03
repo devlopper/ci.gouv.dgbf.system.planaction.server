@@ -6,6 +6,9 @@
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation</class>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}"/>
 			<property name="hibernate.show_sql" value="false"/>

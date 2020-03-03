@@ -18,9 +18,14 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 public class ActivityPersistenceImpl extends AbstractPersistenceEntityImpl<Activity> implements ActivityPersistence,Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String readPlanableByAdministrativeUnitCodeByActionPlanCode,readByAdministrativeUnitsCodes;
+	
 	@Override
 	protected void __listenPostConstructPersistenceQueries__() {
 		super.__listenPostConstructPersistenceQueries__();
+		addQueryCollectInstances(readByAdministrativeUnitsCodes, "SELECT activity FROM Activity activity WHERE activity.administrativeUnit.code IN :administrativeUnitsCodes ORDER BY activity.code ASC");
+		addQueryCollectInstances(readPlanableByAdministrativeUnitCodeByActionPlanCode, "SELECT activity FROM Activity activity WHERE activity.administrativeUnit.code = :administrativeUnitCode "
+				+ "AND NOT EXISTS(SELECT actionPlanActivity FROM ActionPlanActivity actionPlanActivity WHERE actionPlanActivity.actionPlan.code = :actionPlanCode AND actionPlanActivity.activity = activity) ORDER BY activity.code ASC");
 		addQueryCollectInstances(readByFiltersLike, 
 				"SELECT activity FROM Activity activity "
 				+ "WHERE "
@@ -42,6 +47,17 @@ public class ActivityPersistenceImpl extends AbstractPersistenceEntityImpl<Activ
 					,"activityName1",objects[index++],"activityName2",objects[index++],"activityName3",objects[index++],"activityName4",objects[index++]
 					,Activity.FIELD_ADMINISTRATIVE_UNIT,objects[index++]};
 			return objects;
+		}
+		if(queryContext.getQuery().isIdentifierEqualsToOrQueryDerivedFromQueryIdentifierEqualsTo(readPlanableByAdministrativeUnitCodeByActionPlanCode)) {
+			if(ArrayHelper.isEmpty(objects)) {
+				return new Object[] {"actionPlanCode",queryContext.getFilterFieldByKeys("actionPlanCode").getValue()
+						,"administrativeUnitCode",queryContext.getFilterFieldByKeys("administrativeUnitCode").getValue()};
+			}
+		}
+		if(queryContext.getQuery().isIdentifierEqualsToOrQueryDerivedFromQueryIdentifierEqualsTo(readByAdministrativeUnitsCodes)) {
+			if(ArrayHelper.isEmpty(objects)) {
+				return new Object[] {"administrativeUnitsCodes",queryContext.getFilterFieldByKeys("administrativeUnitsCodes").getValue()};
+			}
 		}
 		return super.__getQueryParameters__(queryContext, properties, objects);
 	}
