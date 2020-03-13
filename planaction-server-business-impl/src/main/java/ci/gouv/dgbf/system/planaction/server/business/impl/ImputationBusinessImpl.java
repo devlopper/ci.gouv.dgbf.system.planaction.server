@@ -16,13 +16,13 @@ import org.cyk.utility.server.business.BusinessFunctionRemover;
 
 import ci.gouv.dgbf.system.planaction.server.business.api.ActionPlanActivityBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.ImputationBusiness;
-import ci.gouv.dgbf.system.planaction.server.business.api.ImputationFundingBusiness;
+import ci.gouv.dgbf.system.planaction.server.business.api.FundingBusiness;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanActivityPersistence;
-import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationFundingPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.FundingPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
-import ci.gouv.dgbf.system.planaction.server.persistence.entities.ImputationFunding;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.Funding;
 
 @ApplicationScoped
 public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputation, ImputationPersistence> implements ImputationBusiness,Serializable {
@@ -52,23 +52,25 @@ public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputatio
 	@Override
 	protected void __listenExecuteCreateAfter__(Imputation imputation, Properties properties,BusinessFunctionCreator function) {
 		super.__listenExecuteCreateAfter__(imputation, properties, function);
-		Collection<ImputationFunding> fundings = null;
+		Collection<Funding> fundings = null;
 		for(Integer index = 0; index < imputation.getActionPlan().getNumberOfYears(); index = index + 1) {
 			if(fundings == null)
-				fundings = new ArrayList<>();			
-			fundings.add(new ImputationFunding().setImputation(imputation).setYear((short)(imputation.getActionPlan().getYear()+index)).setEntryAuthorization(0)
-					.setPaymentCredit(0));
+				fundings = new ArrayList<>();	
+			Funding funding = new Funding();
+			funding.setImputation(imputation);
+			funding.getAmount(Boolean.TRUE).setYear((short)(imputation.getActionPlan().getYear()+index)).setEntryAuthorization(0).setPaymentCredit(0);
+			fundings.add(funding);
 		}
 		if(CollectionHelper.isNotEmpty(fundings))
-			__inject__(ImputationFundingBusiness.class).createMany(fundings);
+			__inject__(FundingBusiness.class).createMany(fundings);
 	}
 	
 	@Override
 	protected void __listenExecuteDeleteBefore__(Imputation imputation, Properties properties,BusinessFunctionRemover function) {
 		super.__listenExecuteDeleteBefore__(imputation, properties, function);
-		Collection<ImputationFunding> fundings = __inject__(ImputationFundingPersistence.class).readByImputations(List.of(imputation));
+		Collection<Funding> fundings = __inject__(FundingPersistence.class).readByImputations(List.of(imputation));
 		if(CollectionHelper.isNotEmpty(fundings))
-			__inject__(ImputationFundingBusiness.class).deleteMany(fundings);
+			__inject__(FundingBusiness.class).deleteMany(fundings);
 	}
 	
 	@Override
