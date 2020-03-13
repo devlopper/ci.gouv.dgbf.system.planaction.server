@@ -41,6 +41,11 @@ public class Activity extends AbstractIdentifiableSystemScalarStringIdentifiable
 	/**/
 	
 	@Override
+	public Activity setIdentifier(String identifier) {
+		return (Activity) super.setIdentifier(identifier);
+	}
+	
+	@Override
 	public Activity setCode(String code) {
 		return (Activity) super.setCode(code);
 	}
@@ -61,13 +66,15 @@ public class Activity extends AbstractIdentifiableSystemScalarStringIdentifiable
 	/**/
 	
 	@Override
-	public Activity setIdentifier(String identifier) {
-		return (Activity) super.setIdentifier(identifier);
+	public String toString() {
+		return getCode()+" "+getName();
 	}
+	
+	/**/
 	
 	public static final String FIELD_ADMINISTRATIVE_UNIT = "administrativeUnit";
 	
 	public static final String TABLE_NAME = "activite";	
 	
-	public static final String COLUMN_ADMINISTRATIVE_UNIT = "beneficiaire";
+	public static final String COLUMN_ADMINISTRATIVE_UNIT = AdministrativeUnit.TABLE_NAME;
 }

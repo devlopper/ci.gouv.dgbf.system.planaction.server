@@ -28,4 +28,5 @@ public interface ActionPlanActivityPersistence extends PersistenceEntity<ActionP
 			return 0l;
 		return countByActionPlanCodeByActivityCode(actionPlan.getCode(), activity.getCode());
 	}
+	
 }

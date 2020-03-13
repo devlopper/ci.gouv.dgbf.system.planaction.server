@@ -61,6 +61,14 @@ public class ImputationPersistenceImpl extends AbstractPersistenceEntityImpl<Imp
 			objects = new Object[]{Imputation.FIELD_ACTION_PLAN,objects[index++],Imputation.FIELD_ACTIVITY,objects[index++],Imputation.FIELD_COST_UNIT,objects[index++]};
 			return objects;
 		}
+		if(queryContext.getQuery().isIdentifierEqualsToOrQueryDerivedFromQueryIdentifierEqualsTo(readByActionPlanCodeByActivityCode)) {
+			if(ArrayHelper.isEmpty(objects)) {
+				objects = new Object[] {queryContext.getFilterFieldByKeys(Imputation.FIELD_ACTION_PLAN).getValue(),queryContext.getFilterFieldByKeys(Imputation.FIELD_ACTIVITY).getValue()};
+			}
+			int index = 0;
+			objects = new Object[]{"actionPlanCode",objects[index++],"activityCode",objects[index++]};
+			return objects;
+		}
 		return super.__getQueryParameters__(queryContext, properties, objects);
 	}
 }

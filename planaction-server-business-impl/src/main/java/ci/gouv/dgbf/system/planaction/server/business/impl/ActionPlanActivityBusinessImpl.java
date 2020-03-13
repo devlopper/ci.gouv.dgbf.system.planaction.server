@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.cyk.utility.__kernel__.collection.CollectionHelper;
 import org.cyk.utility.__kernel__.properties.Properties;
 import org.cyk.utility.server.business.AbstractBusinessEntityImpl;
+import org.cyk.utility.server.business.BusinessFunctionCreator;
 import org.cyk.utility.server.business.BusinessFunctionRemover;
 
 import ci.gouv.dgbf.system.planaction.server.business.api.ActionPlanActivityBusiness;
@@ -20,6 +21,21 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 @ApplicationScoped
 public class ActionPlanActivityBusinessImpl extends AbstractBusinessEntityImpl<ActionPlanActivity, ActionPlanActivityPersistence> implements ActionPlanActivityBusiness,Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void __listenExecuteCreateAfter__(ActionPlanActivity actionPlanActivity, Properties properties,BusinessFunctionCreator function) {
+		super.__listenExecuteCreateAfter__(actionPlanActivity, properties, function);
+		/*
+		Collection<Imputation> imputations = null;
+		if(actionPlan.getProducer() instanceof AdministrativeUnit) {
+			imputations = ImputationByAdministrativeUnitsQuerier.getInstance().readByBusinessIdentifiers(actionPlan.getProducer().getCode());
+		}
+		if(CollectionHelper.isNotEmpty(imputations)) {
+			__inject__(ImputationBusiness.class).createMany(imputations.stream().map(activity -> new ActionPlanActivity().setActionPlan(actionPlan)
+					.setActivity(activity)).collect(Collectors.toList()));
+		}
+		*/
+	}
 	
 	@Override
 	protected void __listenExecuteDeleteBefore__(ActionPlanActivity actionPlanActivity, Properties properties,BusinessFunctionRemover function) {

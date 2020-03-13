@@ -16,6 +16,8 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.ImputationFunding;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.Producer;
 
 @ApplicationScoped
 public class ApplicationScopeLifeCycleListener extends AbstractApplicationScopeLifeCycleListener implements Serializable {
@@ -23,12 +25,10 @@ public class ApplicationScopeLifeCycleListener extends AbstractApplicationScopeL
 
 	@Override
 	public void __initialize__(Object object) {
-		__inject__(ApplicationScopeLifeCycleListener.class).initialise();
-		QueryHelper.scan(List.of(AdministrativeUnitPersistence.class.getPackage()));	
-		PersistableClassesGetter.COLLECTION.set(List.of(/*ImputationFunding.class,*/Imputation.class,ActionPlanActivity.class,ActionPlan.class,Activity.class,AdministrativeUnit.class,CostUnit.class));
 		__inject__(org.cyk.utility.server.persistence.impl.ApplicationScopeLifeCycleListener.class).initialize(null);
-		__inject__(ci.gouv.dgbf.system.planaction.server.persistence.entities.ApplicationScopeLifeCycleListener.class).initialize(null);
-		
+		QueryHelper.scan(List.of(AdministrativeUnitPersistence.class.getPackage()));	
+		PersistableClassesGetter.COLLECTION.set(List.of(ImputationFunding.class,Imputation.class,ActionPlanActivity.class,ActionPlan.class,Activity.class,Producer.class,AdministrativeUnit.class,CostUnit.class));		
+		__inject__(ci.gouv.dgbf.system.planaction.server.persistence.entities.ApplicationScopeLifeCycleListener.class).initialize(null);		
 	}
 	
 	@Override

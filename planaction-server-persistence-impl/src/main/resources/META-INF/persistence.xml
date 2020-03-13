@@ -3,12 +3,14 @@
     <persistence-unit name="planactionPersistenceUnit" transaction-type="JTA">
     	<jta-data-source>${data.source.jndi.name}</jta-data-source>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Producer</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ImputationFunding</class>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}"/>
 			<property name="hibernate.show_sql" value="false"/>

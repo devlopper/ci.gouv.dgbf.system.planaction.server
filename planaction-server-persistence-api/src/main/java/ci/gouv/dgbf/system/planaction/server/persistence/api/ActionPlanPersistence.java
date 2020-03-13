@@ -7,6 +7,6 @@ import org.cyk.utility.server.persistence.PersistenceEntity;
 
 public interface ActionPlanPersistence extends PersistenceEntity<ActionPlan> {
 
-	Byte readMaxOrderNumberByAdministrativeUnitCodeByYear(String administrativeUnitCode,Short year,Properties properties);
+	Byte readMaxOrderNumberByProducerCodeByYear(String producerCode,Short year,Properties properties);
 	
 }

@@ -10,17 +10,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true) @NoArgsConstructor
-public class ActionPlanDto extends AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl implements Serializable {
+public class ProducerDto extends AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private ProducerDto producer;
-	private Short year;
-	private Byte numberOfYears;
-	private Byte orderNumber;
-	
 	@Override
-	public ActionPlanDto setIdentifier(String identifier) {
-		return (ActionPlanDto) super.setIdentifier(identifier);
+	public ProducerDto setIdentifier(String identifier) {
+		return (ProducerDto) super.setIdentifier(identifier);
 	}
 
 }

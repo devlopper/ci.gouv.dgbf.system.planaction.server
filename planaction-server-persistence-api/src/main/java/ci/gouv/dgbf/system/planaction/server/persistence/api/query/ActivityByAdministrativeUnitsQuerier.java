@@ -11,14 +11,14 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
 
 @Queries(value = {
-		@Query(tupleClass = Activity.class,name = ActivityByActionPlansQuerier.QUERY_NAME_READ,value = "SELECT activity FROM Activity activity WHERE activity.administrativeUnit.code IN :"+ActivityByActionPlansQuerier.PARAMETER_NAME_ADMINISTRATIVE_UNITS_CODES)
+		@Query(tupleClass = Activity.class,name = ActivityByAdministrativeUnitsQuerier.QUERY_NAME_READ,value = "SELECT tuple FROM Activity tuple WHERE tuple.administrativeUnit.code IN :"+ActivityByAdministrativeUnitsQuerier.PARAMETER_NAME_ADMINISTRATIVE_UNITS_CODES)
 })
-public interface ActivityByActionPlansQuerier extends ByDimensionOneQuerier<Activity, String,AdministrativeUnit,String> {
+public interface ActivityByAdministrativeUnitsQuerier extends ByDimensionOneQuerier<Activity, String,AdministrativeUnit,String> {
 
 	/**/
 	
-	static ActivityByActionPlansQuerier getInstance() {
-		return Helper.getInstance(ActivityByActionPlansQuerier.class, INSTANCE);
+	static ActivityByAdministrativeUnitsQuerier getInstance() {
+		return Helper.getInstance(ActivityByAdministrativeUnitsQuerier.class, INSTANCE);
 	}
 	
 	Value INSTANCE = DependencyInjection.inject(Value.class);

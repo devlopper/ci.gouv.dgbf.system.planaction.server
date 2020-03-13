@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.cyk.utility.__kernel__.object.__static__.persistence.AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +12,7 @@ import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true) @NoArgsConstructor
 @Entity @Table(name=AdministrativeUnit.TABLE_NAME)
-public class AdministrativeUnit extends AbstractIdentifiableSystemScalarStringIdentifiableBusinessStringNamableImpl implements Serializable {
+public class AdministrativeUnit extends Producer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -32,5 +30,5 @@ public class AdministrativeUnit extends AbstractIdentifiableSystemScalarStringId
 		return (AdministrativeUnit) super.setName(name);
 	}
 	
-	public static final String TABLE_NAME = "ua";	
+	public static final String TABLE_NAME = "ua";
 }

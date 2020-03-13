@@ -11,36 +11,38 @@ import org.junit.Test;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActivityPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.AdministrativeUnitPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.ProducerPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.query.ActivityByActionPlansQuerier;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.Producer;
 
 public class PersistenceIntegrationTest extends AbstractPersistenceArquillianIntegrationTestWithDefaultDeployment {
 	private static final long serialVersionUID = 1L;
 	
 	@Test
-	public void actionPlan_readMaxOrderNumberByAdministrativeUnitCodeByYear() throws Exception{
+	public void actionPlan_readMaxOrderNumberByProducerCodeByYear() throws Exception{
 		userTransaction.begin();
-		__inject__(AdministrativeUnitPersistence.class).create(new AdministrativeUnit().setCode("1").setName("1"));
+		__inject__(ProducerPersistence.class).create(new Producer().setIdentifier("1").setCode("1").setName("1"));
 		userTransaction.commit();
-		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByAdministrativeUnitCodeByYear("1", (short)2020, null)).isEqualTo((byte) 0);
+		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByProducerCodeByYear("1", (short)2020, null)).isEqualTo((byte) 0);
 		userTransaction.begin();
-		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("1").setName("1").setAdministrativeUnitFromCode("1").setYear((short)2020).setOrderNumber((byte)1));
+		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("1").setName("1").setProducerFromIdentifier("1").setYear((short)2020).setOrderNumber((byte)1).setNumberOfYears((byte)1));
 		userTransaction.commit();
-		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByAdministrativeUnitCodeByYear("1", (short)2020, null)).isEqualTo((byte) 1);
+		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByProducerCodeByYear("1", (short)2020, null)).isEqualTo((byte) 1);
 		userTransaction.begin();
-		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("2").setName("1").setAdministrativeUnitFromCode("1").setYear((short)2020).setOrderNumber((byte)2));
+		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("2").setName("1").setProducerFromIdentifier("1").setYear((short)2020).setOrderNumber((byte)2).setNumberOfYears((byte)1));
 		userTransaction.commit();
-		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByAdministrativeUnitCodeByYear("1", (short)2020, null)).isEqualTo((byte) 2);
+		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByProducerCodeByYear("1", (short)2020, null)).isEqualTo((byte) 2);
 		userTransaction.begin();
-		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("3").setName("1").setAdministrativeUnitFromCode("1").setYear((short)2020).setOrderNumber((byte)10));
+		__inject__(ActionPlanPersistence.class).create(new ActionPlan().setCode("3").setName("1").setProducerFromIdentifier("1").setYear((short)2020).setOrderNumber((byte)10).setNumberOfYears((byte)1));
 		userTransaction.commit();
-		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByAdministrativeUnitCodeByYear("1", (short)2020, null)).isEqualTo((byte) 10);
+		assertThat(__inject__(ActionPlanPersistence.class).readMaxOrderNumberByProducerCodeByYear("1", (short)2020, null)).isEqualTo((byte) 10);
 	}
 	
 	@Test
-	public void activity_readByAdministrativeUnitsCodes() throws Exception{
+	public void activity_readByProducersCodes() throws Exception{
 		userTransaction.begin();
 		__inject__(AdministrativeUnitPersistence.class).createMany(List.of(new AdministrativeUnit().setCode("1").setName("1"),new AdministrativeUnit().setCode("2").setName("2")
 				,new AdministrativeUnit().setCode("3").setName("3")));
