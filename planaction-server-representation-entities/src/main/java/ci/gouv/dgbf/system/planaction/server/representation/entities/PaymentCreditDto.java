@@ -8,12 +8,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true) @NoArgsConstructor
-public class FundingDto extends AbstractFundingDto implements Serializable {
+public class PaymentCreditDto extends AbstractAmountPlanningDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private EntryAuthorizationDto entryAuthorization;
+	
 	@Override
-	public FundingDto setIdentifier(String identifier) {
-		return (FundingDto) super.setIdentifier(identifier);
+	public PaymentCreditDto setIdentifier(String identifier) {
+		return (PaymentCreditDto) super.setIdentifier(identifier);
 	}
 
 }

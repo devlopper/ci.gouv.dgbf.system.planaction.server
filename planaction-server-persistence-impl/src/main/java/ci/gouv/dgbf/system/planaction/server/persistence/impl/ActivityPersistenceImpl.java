@@ -31,6 +31,13 @@ public class ActivityPersistenceImpl extends AbstractPersistenceEntityImpl<Activ
 				+ "WHERE "
 				+ "("+QueryStringHelper.formatTupleFieldLike("activity", "code","activity") + " OR " + QueryStringHelper.formatTupleFieldLikeOrTokens("activity", "name","activityName",4,LogicalOperator.AND)+")"
 				+ " AND ("+QueryStringHelper.formatTupleFieldLike("activity", "administrativeUnit.code","administrativeUnit") + " OR " + QueryStringHelper.formatTupleFieldLike("activity", "administrativeUnit.name","administrativeUnit")+")"
+				
+				+ " AND (EXISTS (SELECT actionPlanActivity FROM ActionPlanActivity actionPlanActivity WHERE actionPlanActivity.activity = activity AND "
+				+ " (LOWER(actionPlanActivity.actionPlan.code) LIKE LOWER(:actionPlan) OR actionPlanActivity.actionPlan.name LIKE LOWER(:actionPlan)) )) "
+				
+				//+ " AND (EXISTS (SELECT actionPlanActivity FROM ActionPlanActivity actionPlanActivity WHERE actionPlanActivity.activity = activity AND "
+				//+ " (LOWER(actionPlanActivity.actionPlan.code) LIKE LOWER(:actionPlan) OR actionPlanActivity.actionPlan.name LIKE LOWER(:actionPlan)) )) "
+				
 				+ "ORDER BY activity.code ASC");
 	}
 	
@@ -40,12 +47,13 @@ public class ActivityPersistenceImpl extends AbstractPersistenceEntityImpl<Activ
 			if(ArrayHelper.isEmpty(objects)) {
 				List<String> activityTokens = queryContext.getFieldValueLikes("activity",5);
 				objects = new Object[] {activityTokens.get(0),activityTokens.get(0),activityTokens.get(1),activityTokens.get(2)
-						,activityTokens.get(3),activityTokens.get(4),queryContext.getStringLike(Activity.FIELD_ADMINISTRATIVE_UNIT)};
+						,activityTokens.get(3),activityTokens.get(4),queryContext.getStringLike(Activity.FIELD_ADMINISTRATIVE_UNIT)
+						,queryContext.getStringLike(Activity.FIELD_ACTION_PLAN)};
 			}
 			int index = 0;
 			objects = new Object[]{"activity",objects[index++],"activityName",objects[index++]
 					,"activityName1",objects[index++],"activityName2",objects[index++],"activityName3",objects[index++],"activityName4",objects[index++]
-					,Activity.FIELD_ADMINISTRATIVE_UNIT,objects[index++]};
+					,Activity.FIELD_ADMINISTRATIVE_UNIT,objects[index++],Activity.FIELD_ACTION_PLAN,objects[index++]};
 			return objects;
 		}
 		if(queryContext.getQuery().isIdentifierEqualsToOrQueryDerivedFromQueryIdentifierEqualsTo(readPlanableByAdministrativeUnitCodeByActionPlanCode)) {

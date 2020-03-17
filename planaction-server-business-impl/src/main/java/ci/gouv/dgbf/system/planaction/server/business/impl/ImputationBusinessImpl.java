@@ -58,7 +58,7 @@ public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputatio
 				fundings = new ArrayList<>();	
 			Funding funding = new Funding();
 			funding.setImputation(imputation);
-			funding.getAmount(Boolean.TRUE).setYear((short)(imputation.getActionPlan().getYear()+index)).setEntryAuthorization(0).setPaymentCredit(0);
+			funding.setYear((short)(imputation.getActionPlan().getYear()+index)).setEntryAuthorization(0).setPaymentCredit(0);
 			fundings.add(funding);
 		}
 		if(CollectionHelper.isNotEmpty(fundings))

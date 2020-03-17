@@ -10,6 +10,7 @@ import org.cyk.utility.__kernel__.persistence.query.QueryContext;
 import org.cyk.utility.__kernel__.persistence.query.QueryExecutor;
 import org.cyk.utility.__kernel__.persistence.query.QueryStringHelper;
 import org.cyk.utility.__kernel__.properties.Properties;
+import org.cyk.utility.__kernel__.string.StringHelper;
 import org.cyk.utility.server.persistence.AbstractPersistenceEntityImpl;
 import org.cyk.utility.server.persistence.PersistenceFunctionReader;
 
@@ -20,11 +21,13 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 public class ImputationPersistenceImpl extends AbstractPersistenceEntityImpl<Imputation> implements ImputationPersistence,Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String readByActionPlanCodeByActivityCode;
+	private String readByActionPlanCodeByActivityCodeByCostUnitCode,readByActionPlanCodeByActivityCode;
 	
 	@Override
 	protected void __listenPostConstructPersistenceQueries__() {
 		super.__listenPostConstructPersistenceQueries__();
+		addQueryCollectInstances(readByActionPlanCodeByActivityCodeByCostUnitCode, "SELECT imputation FROM Imputation imputation WHERE "
+				+ "imputation.actionPlan.code = :actionPlanCode AND imputation.activity.code = :activityCode AND imputation.costUnit.code = :costUnitCode");
 		addQueryCollectInstances(readByActionPlanCodeByActivityCode, "SELECT imputation FROM Imputation imputation WHERE imputation.actionPlan.code = :actionPlanCode AND imputation.activity.code = :activityCode");
 		addQueryCollectInstances(readByFiltersLike, 
 				"SELECT imputation FROM Imputation imputation "
@@ -33,6 +36,15 @@ public class ImputationPersistenceImpl extends AbstractPersistenceEntityImpl<Imp
 				+ " AND ("+QueryStringHelper.formatTupleFieldLike("imputation", "activity.code","activity") + " OR " + QueryStringHelper.formatTupleFieldLike("imputation", "activity.name","activity")+") "
 				+ " AND ("+QueryStringHelper.formatTupleFieldLike("imputation", "costUnit.code","costUnit") + " OR " + QueryStringHelper.formatTupleFieldLike("imputation", "costUnit.name","costUnit")+") "
 				+ " ORDER BY imputation.activity.code ASC, imputation.costUnit.code ASC");
+	}
+	
+	@Override
+	public Imputation readByActionPlanCodeByActivityCodeByCostUnitCode(String actionPlanCode, String activityCode,String costUnitCode) {
+		if(StringHelper.isBlank(actionPlanCode) || StringHelper.isBlank(activityCode) || StringHelper.isBlank(costUnitCode))
+			return null;
+		return QueryExecutor.getInstance().executeReadOne(Imputation.class, new QueryExecutor.Arguments()
+				.setQuery(new Query().setIdentifier(readByActionPlanCodeByActivityCodeByCostUnitCode)).setParameters("actionPlanCode",actionPlanCode,"activityCode",activityCode
+						,"costUnitCode",costUnitCode));
 	}
 	
 	@Override

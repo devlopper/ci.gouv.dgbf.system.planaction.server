@@ -9,6 +9,8 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 public interface ImputationPersistence extends PersistenceEntity<Imputation> {
 
+	Imputation readByActionPlanCodeByActivityCodeByCostUnitCode(String actionPlanCode,String activityCode,String costUnitCode);
+	
 	Collection<Imputation> readByActionPlanCodeByActivityCode(String actionPlanCode,String activityCode);
 	
 	String READ_BY_ACTION_PLAN_CODE_BY_ACTIVITY_CODE = QueryIdentifierBuilder.getInstance().build(Imputation.class,"readByActionPlanCodeByActivityCode");

@@ -3,15 +3,24 @@
     <persistence-unit name="planactionPersistenceUnit" transaction-type="JTA">
     	<jta-data-source>${data.source.jndi.name}</jta-data-source>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+    	<!-- Not responsible of -->
+    	
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Producer</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity</class>
-    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan</class>
-    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit</class>
-    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Lessor</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.FundingSource</class>
+    	
+    	<!-- Responsible of -->
+    	<!-- Action Plan  -->
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity</class>
+		<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation</class>
+		<!-- Entry Authorization Plan -->
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization</class>
+    	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.PaymentCredit</class>
+    	<!-- Funding -->
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.Funding</class>
     	<class>ci.gouv.dgbf.system.planaction.server.persistence.entities.FundingAllocation</class>
 		<properties>
