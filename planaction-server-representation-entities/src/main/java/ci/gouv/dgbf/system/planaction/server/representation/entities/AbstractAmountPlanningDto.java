@@ -13,7 +13,7 @@ public abstract class AbstractAmountPlanningDto extends AbstractIdentifiableSyst
 	private static final long serialVersionUID = 1L;
 	
 	protected Short year;
-	protected Integer amount;
+	protected Long amount;
 	
 	protected ActionPlanDto actionPlan;
 	protected ActivityDto activity;

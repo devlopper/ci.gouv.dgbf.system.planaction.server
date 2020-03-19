@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -29,6 +30,9 @@ public class Imputation extends AbstractIdentifiableSystemScalarStringImpl imple
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION_PLAN) @NotNull private ActionPlan actionPlan;
 	@ManyToOne @JoinColumn(name=COLUMN_ACTIVITY) @NotNull private Activity activity;
 	@ManyToOne @JoinColumn(name=COLUMN_COST_UNIT) @NotNull private CostUnit costUnit;
+	
+	@Transient private Long fundingEntryAuthorizationsCumulation;
+	@Transient private Long entryAuthorizationsAmountsCumulation;
 	
 	@Override
 	public Imputation setIdentifier(String identifier) {

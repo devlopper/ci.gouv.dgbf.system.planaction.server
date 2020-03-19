@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -22,6 +23,8 @@ public class EntryAuthorization extends AbstractAmountPlanning implements Serial
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_IMPUTATION) @NotNull protected Imputation imputation;
+	
+	@Transient private Long paymentCreditsAmountsCumulation;
 	
 	@Override
 	public EntryAuthorization setIdentifier(String identifier) {

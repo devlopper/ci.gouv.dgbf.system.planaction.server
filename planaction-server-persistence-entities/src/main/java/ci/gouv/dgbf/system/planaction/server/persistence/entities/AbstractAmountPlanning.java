@@ -20,7 +20,7 @@ public abstract class AbstractAmountPlanning extends AbstractIdentifiableSystemS
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name = COLUMN_YEAR) @NotNull @Positive protected Short year;
-	@Column(name = COLUMN_AMOUNT) @NotNull @Positive protected Integer amount;
+	@Column(name = COLUMN_AMOUNT) @NotNull @Positive protected Long amount;
 	
 	@Transient protected Producer producer;
 	@Transient protected ActionPlan actionPlan;

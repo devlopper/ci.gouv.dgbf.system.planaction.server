@@ -17,6 +17,9 @@ public class ImputationDto extends AbstractIdentifiableSystemScalarStringImpl im
 	private ActivityDto activity;
 	private CostUnitDto costUnit;
 	
+	private Long fundingEntryAuthorizationsCumulation;
+	private Long entryAuthorizationsAmountsCumulation;
+	
 	@Override
 	public ImputationDto setIdentifier(String identifier) {
 		return (ImputationDto) super.setIdentifier(identifier);

@@ -34,7 +34,9 @@ public class EntryAuthorizationPersistenceImpl extends AbstractPersistenceEntity
 				
 				+ " AND ("+QueryStringHelper.formatTupleFieldLike("entryAuthorization", "imputation.costUnit.code","costUnit") + " OR " 
 				+ QueryStringHelper.formatTupleFieldLike("entryAuthorization", "imputation.costUnit.name","costUnit")+") "
-								
+				
+				+ " AND ("+QueryStringHelper.formatTupleFieldLike("entryAuthorization", "imputation.identifier","imputation") + ") "
+				
 				+ " ORDER BY "
 				+ "entryAuthorization.imputation.actionPlan.producer.code,entryAuthorization.imputation.actionPlan.year,entryAuthorization.imputation.actionPlan.orderNumber"
 				+ ",entryAuthorization.imputation.activity.code,entryAuthorization.imputation.costUnit.code,entryAuthorization.year ASC");
@@ -45,11 +47,12 @@ public class EntryAuthorizationPersistenceImpl extends AbstractPersistenceEntity
 		if(queryContext.getQuery().isIdentifierEqualsToOrQueryDerivedFromQueryIdentifierEqualsTo(readByFiltersLike)) {
 			if(ArrayHelper.isEmpty(objects)) {
 				objects = new Object[] {queryContext.getStringLike(EntryAuthorization.FIELD_PRODUCER),queryContext.getStringLike(EntryAuthorization.FIELD_ACTION_PLAN)
-						,queryContext.getStringLike(EntryAuthorization.FIELD_ACTIVITY),queryContext.getStringLike(EntryAuthorization.FIELD_COST_UNIT)};
+						,queryContext.getStringLike(EntryAuthorization.FIELD_ACTIVITY),queryContext.getStringLike(EntryAuthorization.FIELD_COST_UNIT)
+						,queryContext.getStringLike(EntryAuthorization.FIELD_IMPUTATION)};
 			}
 			int index = 0;
 			objects = new Object[]{EntryAuthorization.FIELD_PRODUCER,objects[index++],EntryAuthorization.FIELD_ACTION_PLAN,objects[index++],EntryAuthorization.FIELD_ACTIVITY
-					,objects[index++],EntryAuthorization.FIELD_COST_UNIT,objects[index++]};
+					,objects[index++],EntryAuthorization.FIELD_COST_UNIT,objects[index++],EntryAuthorization.FIELD_IMPUTATION,objects[index++]};
 			return objects;
 		}
 		return super.__getQueryParameters__(queryContext, properties, objects);
