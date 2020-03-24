@@ -51,12 +51,12 @@ public class PersistenceIntegrationTest extends AbstractPersistenceArquillianInt
 		__inject__(ActivityPersistence.class).createMany(List.of(new Activity().setCode("1").setName("1").setAdministrativeUnitFromCode("1")
 				,new Activity().setCode("2").setName("2").setAdministrativeUnitFromCode("1"),new Activity().setCode("3").setName("3").setAdministrativeUnitFromCode("2")));
 		userTransaction.commit();
-		assertThat(ActivityByActionPlansQuerier.getInstance().readByBusinessIdentifiers("1").stream().map(x->x.getCode()).collect(Collectors.toList())).containsExactly("1","2");
-		assertThat(ActivityByActionPlansQuerier.getInstance().countByBusinessIdentifiers("1")).isEqualTo(2l);
-		assertThat(ActivityByActionPlansQuerier.getInstance().readByBusinessIdentifiers("2").stream().map(x->x.getCode()).collect(Collectors.toList())).containsExactly("3");
-		assertThat(ActivityByActionPlansQuerier.getInstance().countByBusinessIdentifiers("2")).isEqualTo(1l);
-		assertThat(ActivityByActionPlansQuerier.getInstance().readByBusinessIdentifiers("3")).isNull();
-		assertThat(ActivityByActionPlansQuerier.getInstance().countByBusinessIdentifiers("3")).isEqualTo(0l);
+		assertThat(ActivityByActionPlansQuerier.getInstance().readByIdentifiers("1").stream().map(x->x.getCode()).collect(Collectors.toList())).containsExactly("1","2");
+		assertThat(ActivityByActionPlansQuerier.getInstance().countByIdentifiers("1")).isEqualTo(2l);
+		assertThat(ActivityByActionPlansQuerier.getInstance().readByIdentifiers("2").stream().map(x->x.getCode()).collect(Collectors.toList())).containsExactly("3");
+		assertThat(ActivityByActionPlansQuerier.getInstance().countByIdentifiers("2")).isEqualTo(1l);
+		assertThat(ActivityByActionPlansQuerier.getInstance().readByIdentifiers("3")).isNull();
+		assertThat(ActivityByActionPlansQuerier.getInstance().countByIdentifiers("3")).isEqualTo(0l);
 	}
 	
 }

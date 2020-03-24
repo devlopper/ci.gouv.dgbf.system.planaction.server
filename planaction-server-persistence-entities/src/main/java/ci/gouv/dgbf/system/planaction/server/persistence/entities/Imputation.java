@@ -1,6 +1,7 @@
 package ci.gouv.dgbf.system.planaction.server.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,6 +31,8 @@ public class Imputation extends AbstractIdentifiableSystemScalarStringImpl imple
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION_PLAN) @NotNull private ActionPlan actionPlan;
 	@ManyToOne @JoinColumn(name=COLUMN_ACTIVITY) @NotNull private Activity activity;
 	@ManyToOne @JoinColumn(name=COLUMN_COST_UNIT) @NotNull private CostUnit costUnit;
+	
+	@Transient private Collection<EntryAuthorization> entryAuthorizations;
 	
 	@Transient private Long fundingEntryAuthorizationsCumulation;
 	@Transient private Long entryAuthorizationsAmountsCumulation;
@@ -71,6 +74,7 @@ public class Imputation extends AbstractIdentifiableSystemScalarStringImpl imple
 	public static final String FIELD_ACTION_PLAN = "actionPlan";
 	public static final String FIELD_ACTIVITY = "activity";
 	public static final String FIELD_COST_UNIT = "costUnit";
+	public static final String FIELD_ENTRY_AUTHORIZATIONS = "entryAuthorizations";
 	
 	public static final String TABLE_NAME = "imputation";
 	

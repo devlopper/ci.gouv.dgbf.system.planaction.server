@@ -11,8 +11,10 @@ import org.cyk.utility.__kernel__.protocol.http.HttpHelper;
 import org.cyk.utility.__kernel__.rest.RestHelper;
 import org.cyk.utility.__kernel__.variable.VariableName;
 import org.cyk.utility.test.weld.AbstractWeldUnitTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class EntitiesUnitTest extends AbstractWeldUnitTest {
 	private static final long serialVersionUID = 1L;
 

@@ -42,7 +42,7 @@ public class ActionPlanBusinessImpl extends AbstractBusinessEntityImpl<ActionPla
 		super.__listenExecuteCreateAfter__(actionPlan, properties, function);
 		Collection<Activity> activities = null;
 		if(actionPlan.getProducer() instanceof AdministrativeUnit) {
-			activities = ActivityByAdministrativeUnitsQuerier.getInstance().readByBusinessIdentifiers(actionPlan.getProducer().getCode());
+			activities = ActivityByAdministrativeUnitsQuerier.getInstance().readByIdentifiers(actionPlan.getProducer().getCode());
 		}
 		if(CollectionHelper.isNotEmpty(activities)) {
 			__inject__(ActionPlanActivityBusiness.class).createMany(activities.stream().map(activity -> new ActionPlanActivity().setActionPlan(actionPlan)

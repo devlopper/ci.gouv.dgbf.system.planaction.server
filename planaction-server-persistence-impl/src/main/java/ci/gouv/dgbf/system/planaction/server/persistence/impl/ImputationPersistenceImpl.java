@@ -1,5 +1,6 @@
 package ci.gouv.dgbf.system.planaction.server.persistence.impl;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Collection;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,6 +16,7 @@ import org.cyk.utility.server.persistence.AbstractPersistenceEntityImpl;
 import org.cyk.utility.server.persistence.PersistenceFunctionReader;
 
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.query.EntryAuthorizationByImputationsQuerier;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 @ApplicationScoped
@@ -51,6 +53,14 @@ public class ImputationPersistenceImpl extends AbstractPersistenceEntityImpl<Imp
 	public Collection<Imputation> readByActionPlanCodeByActivityCode(String actionPlanCode, String activityCode) {
 		return QueryExecutor.getInstance().executeReadMany(Imputation.class, new QueryExecutor.Arguments()
 				.setQuery(new Query().setIdentifier(readByActionPlanCodeByActivityCode)).setParameters("actionPlanCode",actionPlanCode,"activityCode",activityCode));
+	}
+	
+	@Override
+	protected void __listenExecuteReadAfterSetFieldValue__(Imputation imputation, Field field, Properties properties) {
+		super.__listenExecuteReadAfterSetFieldValue__(imputation, field, properties);
+		if(field.getName().equals(Imputation.FIELD_ENTRY_AUTHORIZATIONS)) {
+			imputation.setEntryAuthorizations(EntryAuthorizationByImputationsQuerier.getInstance().read(imputation));
+		}
 	}
 	
 	@Override

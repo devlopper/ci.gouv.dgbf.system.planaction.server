@@ -2,7 +2,7 @@ package ci.gouv.dgbf.system.planaction.server.persistence.api.query;
 
 import org.cyk.utility.__kernel__.DependencyInjection;
 import org.cyk.utility.__kernel__.Helper;
-import org.cyk.utility.__kernel__.persistence.query.ByDimensionOneQuerier;
+import org.cyk.utility.__kernel__.persistence.query.ByDimensionOneBusinessIdentifierQuerier;
 import org.cyk.utility.__kernel__.persistence.query.annotation.Queries;
 import org.cyk.utility.__kernel__.persistence.query.annotation.Query;
 import org.cyk.utility.__kernel__.value.Value;
@@ -13,7 +13,7 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Administrative
 @Queries(value = {
 		@Query(tupleClass = Activity.class,name = ActivityByActionPlansQuerier.QUERY_NAME_READ,value = "SELECT activity FROM Activity activity WHERE activity.administrativeUnit.code IN :"+ActivityByActionPlansQuerier.PARAMETER_NAME_ADMINISTRATIVE_UNITS_CODES)
 })
-public interface ActivityByActionPlansQuerier extends ByDimensionOneQuerier<Activity, String,AdministrativeUnit,String> {
+public interface ActivityByActionPlansQuerier extends ByDimensionOneBusinessIdentifierQuerier<Activity,AdministrativeUnit,String> {
 
 	/**/
 	

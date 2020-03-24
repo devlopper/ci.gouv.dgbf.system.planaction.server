@@ -3,8 +3,10 @@ package ci.gouv.dgbf.system.planaction.server.business.impl.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.cyk.utility.__kernel__.collection.CollectionHelper;
+import org.cyk.utility.__kernel__.properties.Properties;
 import org.cyk.utility.server.business.test.arquillian.AbstractBusinessArquillianIntegrationTestWithDefaultDeployment;
 import org.junit.Test;
 
@@ -22,6 +24,7 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 public class BusinessIntegrationTest extends AbstractBusinessArquillianIntegrationTestWithDefaultDeployment {
@@ -115,7 +118,7 @@ public class BusinessIntegrationTest extends AbstractBusinessArquillianIntegrati
 		
 		ActionPlan actionPlan = __inject__(ActionPlanPersistence.class).readBySystemIdentifier("1");
 		assertThat(__inject__(ActionPlanActivityPersistence.class).count()).isEqualTo(2l);
-		assertThat(ActionPlanActivityByActionPlansQuerier.getInstance().countByBusinessIdentifiers(actionPlan.getCode())).isEqualTo(2l);
+		assertThat(ActionPlanActivityByActionPlansQuerier.getInstance().countByIdentifiers(actionPlan.getCode())).isEqualTo(2l);
 		
 		__inject__(ImputationBusiness.class).createMany(List.of(new Imputation().setActionPlanFromIdentifier("1").setActivityFromCode("1").setCostUnitFromCode("1")
 				,new Imputation().setActionPlanFromIdentifier("1").setActivityFromCode("1").setCostUnitFromCode("2")));
@@ -123,5 +126,33 @@ public class BusinessIntegrationTest extends AbstractBusinessArquillianIntegrati
 		actionPlan = __inject__(ActionPlanPersistence.class).readBySystemIdentifier("1");
 		assertThat(CollectionHelper.getSize(__inject__(ImputationPersistence.class).readByActionPlanCodeByActivityCode(actionPlan.getCode(), "1"))).isEqualTo(2);
 		assertThat(CollectionHelper.getSize(__inject__(ImputationPersistence.class).readByActionPlanCodeByActivityCode(actionPlan.getCode(), "2"))).isEqualTo(0);
+	}
+
+	@Test
+	public void imputation_update_one_entryAutorizations(){
+		__inject__(CostUnitBusiness.class).createMany(List.of(new CostUnit().setCode("1").setName("1"),new CostUnit().setCode("2").setName("1")));
+		__inject__(AdministrativeUnitBusiness.class).create(new AdministrativeUnit().setIdentifier("1").setCode("1").setName("1"));
+		__inject__(ActivityBusiness.class).createMany(List.of(new Activity().setCode("1").setName("1").setAdministrativeUnitFromCode("1")
+				,new Activity().setCode("2").setName("1").setAdministrativeUnitFromCode("1"),new Activity().setCode("3").setName("1").setAdministrativeUnitFromCode("1")));
+		__inject__(ActionPlanBusiness.class).create(new ActionPlan().setIdentifier("1").setProducerFromIdentifier("1").setYear((short)2020));
+		__inject__(ImputationBusiness.class).createMany(List.of(new Imputation().setIdentifier("1").setActionPlanFromIdentifier("1").setActivityFromCode("1")
+				.setCostUnitFromCode("1"),new Imputation().setIdentifier("2").setActionPlanFromIdentifier("1").setActivityFromCode("1").setCostUnitFromCode("2")));
+		Imputation imputation = __inject__(ImputationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		assertThat(imputation).isNotNull();
+		assertThat(imputation.getEntryAuthorizations()).isNull();
+		imputation.setEntryAuthorizations(List.of(new EntryAuthorization().setYear((short)2020).setAmount(100l)));
+		__inject__(ImputationBusiness.class).update(imputation,new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		imputation = __inject__(ImputationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		assertThat(imputation.getEntryAuthorizations()).isNotNull();
+		assertThat(imputation.getEntryAuthorizations().stream().map(x -> x.getYear()).collect(Collectors.toList())).contains((short)2020);
+		imputation.getEntryAuthorizations().addAll(List.of(new EntryAuthorization().setYear((short)2021).setAmount(150l)
+				,new EntryAuthorization().setYear((short)2022).setAmount(300l)));
+		__inject__(ImputationBusiness.class).update(imputation,new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		imputation = __inject__(ImputationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		assertThat(imputation.getEntryAuthorizations().stream().map(x -> x.getYear()).collect(Collectors.toList())).contains((short)2020,(short)2022,(short)2022);
+		imputation.getEntryAuthorizations().clear();
+		__inject__(ImputationBusiness.class).update(imputation,new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		imputation = __inject__(ImputationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
+		assertThat(imputation.getEntryAuthorizations()).isNull();
 	}
 }

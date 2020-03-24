@@ -15,7 +15,9 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActi
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Activity;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.AdministrativeUnit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.PaymentCredit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Funding;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Producer;
 
@@ -27,7 +29,7 @@ public class ApplicationScopeLifeCycleListener extends AbstractApplicationScopeL
 	public void __initialize__(Object object) {
 		__inject__(org.cyk.utility.server.persistence.impl.ApplicationScopeLifeCycleListener.class).initialize(null);
 		QueryHelper.scan(List.of(AdministrativeUnitPersistence.class.getPackage()));	
-		PersistableClassesGetter.COLLECTION.set(List.of(Funding.class,Imputation.class,ActionPlanActivity.class,ActionPlan.class,Activity.class,Producer.class,AdministrativeUnit.class,CostUnit.class));		
+		PersistableClassesGetter.COLLECTION.set(List.of(Funding.class,PaymentCredit.class,EntryAuthorization.class,Imputation.class,ActionPlanActivity.class,ActionPlan.class,Activity.class,Producer.class,AdministrativeUnit.class,CostUnit.class));		
 		__inject__(ci.gouv.dgbf.system.planaction.server.persistence.entities.ApplicationScopeLifeCycleListener.class).initialize(null);		
 	}
 	

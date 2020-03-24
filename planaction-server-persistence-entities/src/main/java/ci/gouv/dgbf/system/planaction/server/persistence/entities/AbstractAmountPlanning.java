@@ -11,11 +11,12 @@ import javax.validation.constraints.Positive;
 import org.cyk.utility.__kernel__.object.__static__.persistence.AbstractIdentifiableSystemScalarStringImpl;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true)
-@MappedSuperclass
+@MappedSuperclass @NoArgsConstructor
 public abstract class AbstractAmountPlanning extends AbstractIdentifiableSystemScalarStringImpl implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -27,6 +28,10 @@ public abstract class AbstractAmountPlanning extends AbstractIdentifiableSystemS
 	@Transient protected Activity activity;
 	@Transient protected CostUnit costUnit;
 	
+	public AbstractAmountPlanning(Short year,Long amount) {
+		this.year = year;
+		this.amount = amount;
+	}
 	
 	public static final String FIELD_YEAR = "year";
 	public static final String FIELD_AMOUNT = "amount";

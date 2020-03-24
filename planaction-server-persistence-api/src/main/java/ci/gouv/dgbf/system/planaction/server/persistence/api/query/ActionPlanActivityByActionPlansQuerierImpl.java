@@ -14,7 +14,7 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActi
 public class ActionPlanActivityByActionPlansQuerierImpl extends AbstractObject implements ActionPlanActivityByActionPlansQuerier,Serializable {
 
 	@Override
-	public Collection<ActionPlanActivity> readByBusinessIdentifiers(Collection<String> businessIdentifiers,Arguments arguments) {
+	public Collection<ActionPlanActivity> readByIdentifiers(Collection<String> businessIdentifiers,Arguments arguments) {
 		if(CollectionHelper.isEmpty(businessIdentifiers))
 			return null;
 		if(arguments == null)
@@ -24,7 +24,7 @@ public class ActionPlanActivityByActionPlansQuerierImpl extends AbstractObject i
 	}
 
 	@Override
-	public Long countByBusinessIdentifiers(Collection<String> businessIdentifiers, Arguments arguments) {
+	public Long countByIdentifiers(Collection<String> businessIdentifiers, Arguments arguments) {
 		if(CollectionHelper.isEmpty(businessIdentifiers))
 			return null;
 		if(arguments == null)

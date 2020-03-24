@@ -8,21 +8,26 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.cyk.utility.__kernel__.business.EntitySaver;
 import org.cyk.utility.__kernel__.collection.CollectionHelper;
 import org.cyk.utility.__kernel__.properties.Properties;
+import org.cyk.utility.__kernel__.string.Strings;
 import org.cyk.utility.server.business.AbstractBusinessEntityImpl;
 import org.cyk.utility.server.business.BusinessFunctionCreator;
+import org.cyk.utility.server.business.BusinessFunctionModifier;
 import org.cyk.utility.server.business.BusinessFunctionRemover;
 
 import ci.gouv.dgbf.system.planaction.server.business.api.ActionPlanActivityBusiness;
-import ci.gouv.dgbf.system.planaction.server.business.api.ImputationBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.FundingBusiness;
+import ci.gouv.dgbf.system.planaction.server.business.api.ImputationBusiness;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanActivityPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.FundingPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.query.EntryAuthorizationByImputationsQuerier;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlanActivity;
-import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Funding;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 @ApplicationScoped
 public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputation, ImputationPersistence> implements ImputationBusiness,Serializable {
@@ -63,6 +68,23 @@ public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputatio
 		}
 		if(CollectionHelper.isNotEmpty(fundings))
 			__inject__(FundingBusiness.class).createMany(fundings);
+	}
+	
+	@Override
+	protected void __listenExecuteUpdateBefore__(Imputation imputation, Properties properties,BusinessFunctionModifier function) {
+		super.__listenExecuteUpdateBefore__(imputation, properties, function);
+		Strings fields = __getFieldsFromProperties__(properties);
+		if(CollectionHelper.isEmpty(fields))
+			return;
+		for(String index : fields.get()) {
+			if(Imputation.FIELD_ENTRY_AUTHORIZATIONS.equals(index)) {
+				if(CollectionHelper.isNotEmpty(imputation.getEntryAuthorizations()))
+					imputation.getEntryAuthorizations().forEach(entryAuthorization -> {entryAuthorization.setImputation(imputation);});
+				EntitySaver.getInstance().save(EntryAuthorization.class, new EntitySaver.Arguments<EntryAuthorization>()
+						.setProvidedCollection(imputation.getEntryAuthorizations())
+						.setExistingCollection(EntryAuthorizationByImputationsQuerier.getInstance().read(imputation)));
+			}
+		}
 	}
 	
 	@Override

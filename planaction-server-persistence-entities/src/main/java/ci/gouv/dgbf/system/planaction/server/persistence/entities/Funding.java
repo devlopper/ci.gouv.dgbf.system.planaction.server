@@ -31,5 +31,5 @@ public class Funding extends AbstractFunding implements Serializable {
 	
 	public static final String TABLE_NAME = "financement";	
 	
-	public static final String UNIQUE_CONSTRAINT_IMPUTATION_FUNDING_YEAR = COLUMN_IMPUTATION+"_"+Amount.COLUMN_YEAR;
+	public static final String UNIQUE_CONSTRAINT_IMPUTATION_FUNDING_YEAR = TABLE_NAME+"_"+COLUMN_IMPUTATION+"_"+Amount.COLUMN_YEAR;
 }
