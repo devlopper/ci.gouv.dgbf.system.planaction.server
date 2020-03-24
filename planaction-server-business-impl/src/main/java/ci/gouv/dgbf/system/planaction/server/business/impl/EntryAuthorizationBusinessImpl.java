@@ -4,15 +4,21 @@ import java.io.Serializable;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import ci.gouv.dgbf.system.planaction.server.business.api.EntryAuthorizationBusiness;
-import ci.gouv.dgbf.system.planaction.server.persistence.api.EntryAuthorizationPersistence;
-import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
-import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
-
+import org.cyk.utility.__kernel__.business.EntitySaver;
+import org.cyk.utility.__kernel__.collection.CollectionHelper;
 import org.cyk.utility.__kernel__.properties.Properties;
+import org.cyk.utility.__kernel__.string.Strings;
 import org.cyk.utility.server.business.AbstractBusinessEntityImpl;
 import org.cyk.utility.server.business.BusinessFunctionCreator;
 import org.cyk.utility.server.business.BusinessFunctionModifier;
+
+import ci.gouv.dgbf.system.planaction.server.business.api.EntryAuthorizationBusiness;
+import ci.gouv.dgbf.system.planaction.server.business.api.PaymentCreditBusiness;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.EntryAuthorizationPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.query.PaymentCreditByEntryAuthorizationsQuerier;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.PaymentCredit;
 
 @ApplicationScoped
 public class EntryAuthorizationBusinessImpl extends AbstractBusinessEntityImpl<EntryAuthorization, EntryAuthorizationPersistence> implements EntryAuthorizationBusiness,Serializable {
@@ -31,17 +37,27 @@ public class EntryAuthorizationBusinessImpl extends AbstractBusinessEntityImpl<E
 	@Override
 	protected void __listenExecuteCreateAfter__(EntryAuthorization entryAuthorization, Properties properties,BusinessFunctionCreator function) {
 		super.__listenExecuteCreateAfter__(entryAuthorization, properties, function);
-		savePaymentCredits(entryAuthorization);
+		if(CollectionHelper.isNotEmpty(entryAuthorization.getPaymentCredits())) {
+			entryAuthorization.getPaymentCredits().forEach(paymentCredit -> {paymentCredit.setEntryAuthorization(entryAuthorization);});
+			__inject__(PaymentCreditBusiness.class).createMany(entryAuthorization.getPaymentCredits());
+		}			
 	}
 	
 	@Override
 	protected void __listenExecuteUpdateBefore__(EntryAuthorization entryAuthorization, Properties properties,BusinessFunctionModifier function) {
 		super.__listenExecuteUpdateBefore__(entryAuthorization, properties, function);
-		savePaymentCredits(entryAuthorization);
-	}
-	
-	private void savePaymentCredits(EntryAuthorization entryAuthorization) {
-		
+		Strings fields = __getFieldsFromProperties__(properties);
+		if(CollectionHelper.isEmpty(fields))
+			return;
+		for(String index : fields.get()) {
+			if(EntryAuthorization.FIELD_PAYMENT_CREDITS.equals(index)) {
+				if(CollectionHelper.isNotEmpty(entryAuthorization.getPaymentCredits()))
+					entryAuthorization.getPaymentCredits().forEach(paymentCredit -> {paymentCredit.setEntryAuthorization(entryAuthorization);});
+				EntitySaver.getInstance().save(PaymentCredit.class, new EntitySaver.Arguments<PaymentCredit>()
+						.setProvidedCollection(entryAuthorization.getPaymentCredits())
+						.setExistingCollection(PaymentCreditByEntryAuthorizationsQuerier.getInstance().read(entryAuthorization)));
+			}
+		}
 	}
 	
 	@Override

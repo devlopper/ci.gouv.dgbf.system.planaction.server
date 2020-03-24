@@ -14,10 +14,12 @@ import ci.gouv.dgbf.system.planaction.server.business.api.ActionPlanBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.ActivityBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.AdministrativeUnitBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.CostUnitBusiness;
+import ci.gouv.dgbf.system.planaction.server.business.api.EntryAuthorizationBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.ImputationBusiness;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanActivityPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.AdministrativeUnitPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.EntryAuthorizationPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.query.ActionPlanActivityByActionPlansQuerier;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.ActionPlan;
@@ -26,6 +28,7 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.Administrative
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.CostUnit;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.PaymentCredit;
 
 public class BusinessIntegrationTest extends AbstractBusinessArquillianIntegrationTestWithDefaultDeployment {
 	private static final long serialVersionUID = 1L;
@@ -154,5 +157,37 @@ public class BusinessIntegrationTest extends AbstractBusinessArquillianIntegrati
 		__inject__(ImputationBusiness.class).update(imputation,new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
 		imputation = __inject__(ImputationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(Imputation.FIELD_ENTRY_AUTHORIZATIONS));
 		assertThat(imputation.getEntryAuthorizations()).isNull();
+	}
+	
+	@Test
+	public void entryAuthorization_update_one_paymentCredits(){
+		__inject__(CostUnitBusiness.class).createMany(List.of(new CostUnit().setCode("1").setName("1"),new CostUnit().setCode("2").setName("1")));
+		__inject__(AdministrativeUnitBusiness.class).create(new AdministrativeUnit().setIdentifier("1").setCode("1").setName("1"));
+		__inject__(ActivityBusiness.class).createMany(List.of(new Activity().setCode("1").setName("1").setAdministrativeUnitFromCode("1")
+				,new Activity().setCode("2").setName("1").setAdministrativeUnitFromCode("1"),new Activity().setCode("3").setName("1").setAdministrativeUnitFromCode("1")));
+		__inject__(ActionPlanBusiness.class).create(new ActionPlan().setIdentifier("1").setProducerFromIdentifier("1").setYear((short)2020));
+		__inject__(ImputationBusiness.class).createMany(List.of(new Imputation().setIdentifier("1").setActionPlanFromIdentifier("1").setActivityFromCode("1")
+				.setCostUnitFromCode("1"),new Imputation().setIdentifier("2").setActionPlanFromIdentifier("1").setActivityFromCode("1").setCostUnitFromCode("2")));
+		__inject__(EntryAuthorizationBusiness.class).createMany(List.of(
+				new EntryAuthorization().setIdentifier("1").setImputationFromIdentifier("1").setYear((short)2020).setAmount(100l)
+				,new EntryAuthorization().setIdentifier("2").setImputationFromIdentifier("2").setYear((short)2021).setAmount(175l)
+				));
+		EntryAuthorization entryAuthorization = __inject__(EntryAuthorizationPersistence.class).readBySystemIdentifier("1",new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		assertThat(entryAuthorization).isNotNull();
+		assertThat(entryAuthorization.getPaymentCredits()).isNull();
+		entryAuthorization.setPaymentCredits(List.of( new PaymentCredit().setYear((short)2020).setAmount(100l)));
+		__inject__(EntryAuthorizationBusiness.class).update(entryAuthorization,new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));		
+		entryAuthorization = __inject__(EntryAuthorizationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		assertThat(entryAuthorization.getPaymentCredits()).isNotNull();
+		assertThat(entryAuthorization.getPaymentCredits().stream().map(x -> x.getYear()).collect(Collectors.toList())).contains((short)2020);
+		entryAuthorization.getPaymentCredits().addAll(List.of(new PaymentCredit().setYear((short)2021).setAmount(150l)
+				,new PaymentCredit().setYear((short)2022).setAmount(300l)));
+		__inject__(EntryAuthorizationBusiness.class).update(entryAuthorization,new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		entryAuthorization = __inject__(EntryAuthorizationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		assertThat(entryAuthorization.getPaymentCredits().stream().map(x -> x.getYear()).collect(Collectors.toList())).contains((short)2020,(short)2022,(short)2022);
+		entryAuthorization.getPaymentCredits().clear();
+		__inject__(EntryAuthorizationBusiness.class).update(entryAuthorization,new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		entryAuthorization = __inject__(EntryAuthorizationPersistence.class).readBySystemIdentifier("1", new Properties().setFields(EntryAuthorization.FIELD_PAYMENT_CREDITS));
+		assertThat(entryAuthorization.getPaymentCredits()).isNull();
 	}
 }

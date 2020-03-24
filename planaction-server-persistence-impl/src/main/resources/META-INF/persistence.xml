@@ -28,6 +28,9 @@
 			<property name="hibernate.show_sql" value="false"/>
 			<property name="hibernate.format_sql" value="false"/>
 			<property name="hibernate.physical_naming_strategy" value="org.cyk.utility.server.persistence.impl.hibernate.PhysicalNamingStrategyStandardImpl"/>
+			
+			<!-- Caching -->
+			<property name="javax.persistence.sharedCache.mode" value="DISABLE_SELECTIVE"/>
 		</properties>
 
     </persistence-unit>  

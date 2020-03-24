@@ -1,5 +1,6 @@
 package ci.gouv.dgbf.system.planaction.server.persistence.impl;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -10,6 +11,7 @@ import org.cyk.utility.__kernel__.properties.Properties;
 import org.cyk.utility.server.persistence.AbstractPersistenceEntityImpl;
 
 import ci.gouv.dgbf.system.planaction.server.persistence.api.EntryAuthorizationPersistence;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.query.PaymentCreditByEntryAuthorizationsQuerier;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 
 @ApplicationScoped
@@ -40,6 +42,14 @@ public class EntryAuthorizationPersistenceImpl extends AbstractPersistenceEntity
 				+ " ORDER BY "
 				+ "entryAuthorization.imputation.actionPlan.producer.code,entryAuthorization.imputation.actionPlan.year,entryAuthorization.imputation.actionPlan.orderNumber"
 				+ ",entryAuthorization.imputation.activity.code,entryAuthorization.imputation.costUnit.code,entryAuthorization.year ASC");
+	}
+	
+	@Override
+	protected void __listenExecuteReadAfterSetFieldValue__(EntryAuthorization entryAuthorization, Field field, Properties properties) {
+		super.__listenExecuteReadAfterSetFieldValue__(entryAuthorization, field, properties);
+		if(field.getName().equals(EntryAuthorization.FIELD_PAYMENT_CREDITS)) {
+			entryAuthorization.setPaymentCredits(PaymentCreditByEntryAuthorizationsQuerier.getInstance().read(entryAuthorization));
+		}
 	}
 	
 	@Override

@@ -67,6 +67,7 @@ public class EntryAuthorization extends AbstractAmountPlanning implements Serial
 	private static final String TO_STRING_FORMAT = "%s/%s/%s";
 	
 	public static final String FIELD_IMPUTATION = "imputation";
+	public static final String FIELD_PAYMENT_CREDITS = "paymentCredits";
 	
 	public static final String TABLE_NAME = "ae";
 	

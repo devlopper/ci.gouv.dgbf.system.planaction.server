@@ -28,6 +28,16 @@ public class PaymentCredit extends AbstractAmountPlanning implements Serializabl
 	}
 	
 	@Override
+	public PaymentCredit setYear(Short year) {
+		return (PaymentCredit) super.setYear(year);
+	}
+	
+	@Override
+	public PaymentCredit setAmount(Long amount) {
+		return (PaymentCredit) super.setAmount(amount);
+	}
+	
+	@Override
 	public String toString() {
 		return String.format(TO_STRING_FORMAT, entryAuthorization,year,amount);
 	}
