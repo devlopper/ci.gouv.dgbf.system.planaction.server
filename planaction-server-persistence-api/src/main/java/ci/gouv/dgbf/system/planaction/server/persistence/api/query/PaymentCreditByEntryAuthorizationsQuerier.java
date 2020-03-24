@@ -11,7 +11,8 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthoriza
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.PaymentCredit;
 
 @Queries(value = {
-		@Query(tupleClass = PaymentCredit.class,name = PaymentCreditByEntryAuthorizationsQuerier.QUERY_NAME_READ,value = "SELECT paymentCredit FROM PaymentCredit paymentCredit WHERE paymentCredit.entryAuthorization.identifier IN :"+PaymentCreditByEntryAuthorizationsQuerier.PARAMETER_NAME_ENTRY_AUTHORIZATIONS_IDENTIFIERS)
+		@Query(tupleClass = PaymentCredit.class,name = PaymentCreditByEntryAuthorizationsQuerier.QUERY_NAME_READ,value = "SELECT paymentCredit FROM PaymentCredit paymentCredit WHERE paymentCredit.entryAuthorization.identifier IN :"
+				+PaymentCreditByEntryAuthorizationsQuerier.PARAMETER_NAME_ENTRY_AUTHORIZATIONS_IDENTIFIERS+" ORDER BY paymentCredit.year ASC")
 })
 public interface PaymentCreditByEntryAuthorizationsQuerier extends ByDimensionOneSystemIdentifierQuerier<PaymentCredit,EntryAuthorization,String> {
 

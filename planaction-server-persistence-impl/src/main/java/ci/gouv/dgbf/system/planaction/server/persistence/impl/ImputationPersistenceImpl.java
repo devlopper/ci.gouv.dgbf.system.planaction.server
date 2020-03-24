@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.cyk.utility.__kernel__.array.ArrayHelper;
+import org.cyk.utility.__kernel__.collection.CollectionHelper;
 import org.cyk.utility.__kernel__.persistence.query.Query;
 import org.cyk.utility.__kernel__.persistence.query.QueryContext;
 import org.cyk.utility.__kernel__.persistence.query.QueryExecutor;
@@ -17,6 +18,8 @@ import org.cyk.utility.server.persistence.PersistenceFunctionReader;
 
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ImputationPersistence;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.query.EntryAuthorizationByImputationsQuerier;
+import ci.gouv.dgbf.system.planaction.server.persistence.api.query.PaymentCreditByEntryAuthorizationsQuerier;
+import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthorization;
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 @ApplicationScoped
@@ -60,7 +63,17 @@ public class ImputationPersistenceImpl extends AbstractPersistenceEntityImpl<Imp
 		super.__listenExecuteReadAfterSetFieldValue__(imputation, field, properties);
 		if(field.getName().equals(Imputation.FIELD_ENTRY_AUTHORIZATIONS)) {
 			imputation.setEntryAuthorizations(EntryAuthorizationByImputationsQuerier.getInstance().read(imputation));
+			if(CollectionHelper.isNotEmpty(imputation.getEntryAuthorizations())) {
+				for(EntryAuthorization entryAuthorization : imputation.getEntryAuthorizations()) {
+					entryAuthorization.setPaymentCredits(PaymentCreditByEntryAuthorizationsQuerier.getInstance().read(entryAuthorization));
+				}
+			}
 		}
+	}
+	
+	@Override
+	protected void __listenExecuteReadAfterSetFieldValue__(Imputation imputation, String fieldName, Properties properties) {
+		super.__listenExecuteReadAfterSetFieldValue__(imputation, fieldName, properties);
 	}
 	
 	@Override

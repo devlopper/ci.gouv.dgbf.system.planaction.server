@@ -1,6 +1,7 @@
 package ci.gouv.dgbf.system.planaction.server.representation.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.cyk.utility.__kernel__.object.__static__.representation.AbstractIdentifiableSystemScalarStringImpl;
 
@@ -16,6 +17,7 @@ public class ImputationDto extends AbstractIdentifiableSystemScalarStringImpl im
 	private ActionPlanDto actionPlan;
 	private ActivityDto activity;
 	private CostUnitDto costUnit;
+	private ArrayList<EntryAuthorizationDto> entryAuthorizations;
 	
 	private Long fundingEntryAuthorizationsCumulation;
 	private Long entryAuthorizationsAmountsCumulation;

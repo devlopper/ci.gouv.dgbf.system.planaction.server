@@ -1,8 +1,10 @@
 package ci.gouv.dgbf.system.planaction.server.business.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
 
 import org.cyk.utility.__kernel__.business.EntitySaver;
 import org.cyk.utility.__kernel__.collection.CollectionHelper;
@@ -55,7 +57,24 @@ public class EntryAuthorizationBusinessImpl extends AbstractBusinessEntityImpl<E
 					entryAuthorization.getPaymentCredits().forEach(paymentCredit -> {paymentCredit.setEntryAuthorization(entryAuthorization);});
 				EntitySaver.getInstance().save(PaymentCredit.class, new EntitySaver.Arguments<PaymentCredit>()
 						.setProvidedCollection(entryAuthorization.getPaymentCredits())
-						.setExistingCollection(PaymentCreditByEntryAuthorizationsQuerier.getInstance().read(entryAuthorization)));
+						.setExistingCollection(PaymentCreditByEntryAuthorizationsQuerier.getInstance().read(entryAuthorization))
+						.setListener(new EntitySaver.Listener.AbstractImpl<PaymentCredit>() {
+							@Override
+							public void create(Collection<PaymentCredit> collection, EntityManager entityManager) {
+								__inject__(PaymentCreditBusiness.class).createMany(collection);
+							}
+							
+							@Override
+							public void update(Collection<PaymentCredit> collection, EntityManager entityManager) {
+								__inject__(PaymentCreditBusiness.class).updateMany(collection);
+							}
+							
+							@Override
+							public void delete(Collection<PaymentCredit> collection, EntityManager entityManager) {
+								__inject__(PaymentCreditBusiness.class).deleteMany(collection);
+							}
+						})
+					);
 			}
 		}
 	}

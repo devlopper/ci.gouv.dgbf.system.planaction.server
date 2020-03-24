@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
 
 import org.cyk.utility.__kernel__.business.EntitySaver;
 import org.cyk.utility.__kernel__.collection.CollectionHelper;
@@ -18,6 +19,7 @@ import org.cyk.utility.server.business.BusinessFunctionModifier;
 import org.cyk.utility.server.business.BusinessFunctionRemover;
 
 import ci.gouv.dgbf.system.planaction.server.business.api.ActionPlanActivityBusiness;
+import ci.gouv.dgbf.system.planaction.server.business.api.EntryAuthorizationBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.FundingBusiness;
 import ci.gouv.dgbf.system.planaction.server.business.api.ImputationBusiness;
 import ci.gouv.dgbf.system.planaction.server.persistence.api.ActionPlanActivityPersistence;
@@ -82,7 +84,24 @@ public class ImputationBusinessImpl extends AbstractBusinessEntityImpl<Imputatio
 					imputation.getEntryAuthorizations().forEach(entryAuthorization -> {entryAuthorization.setImputation(imputation);});
 				EntitySaver.getInstance().save(EntryAuthorization.class, new EntitySaver.Arguments<EntryAuthorization>()
 						.setProvidedCollection(imputation.getEntryAuthorizations())
-						.setExistingCollection(EntryAuthorizationByImputationsQuerier.getInstance().read(imputation)));
+						.setExistingCollection(EntryAuthorizationByImputationsQuerier.getInstance().read(imputation))
+						.setListener(new EntitySaver.Listener.AbstractImpl<EntryAuthorization>() {
+							@Override
+							public void create(Collection<EntryAuthorization> collection, EntityManager entityManager) {
+								__inject__(EntryAuthorizationBusiness.class).createMany(collection);
+							}
+							
+							@Override
+							public void update(Collection<EntryAuthorization> collection, EntityManager entityManager) {
+								__inject__(EntryAuthorizationBusiness.class).updateMany(collection);
+							}
+							
+							@Override
+							public void delete(Collection<EntryAuthorization> collection, EntityManager entityManager) {
+								__inject__(EntryAuthorizationBusiness.class).deleteMany(collection);
+							}
+						})
+					);
 			}
 		}
 	}

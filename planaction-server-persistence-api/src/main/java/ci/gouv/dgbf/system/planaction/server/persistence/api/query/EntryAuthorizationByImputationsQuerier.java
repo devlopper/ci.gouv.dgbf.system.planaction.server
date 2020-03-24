@@ -11,7 +11,8 @@ import ci.gouv.dgbf.system.planaction.server.persistence.entities.EntryAuthoriza
 import ci.gouv.dgbf.system.planaction.server.persistence.entities.Imputation;
 
 @Queries(value = {
-		@Query(tupleClass = EntryAuthorization.class,name = EntryAuthorizationByImputationsQuerier.QUERY_NAME_READ,value = "SELECT entryAuthorization FROM EntryAuthorization entryAuthorization WHERE entryAuthorization.imputation.identifier IN :"+EntryAuthorizationByImputationsQuerier.PARAMETER_NAME_IMPUTATIONS_IDENTIFIERS)
+		@Query(tupleClass = EntryAuthorization.class,name = EntryAuthorizationByImputationsQuerier.QUERY_NAME_READ,value = "SELECT entryAuthorization FROM EntryAuthorization entryAuthorization WHERE entryAuthorization.imputation.identifier IN :"
+				+EntryAuthorizationByImputationsQuerier.PARAMETER_NAME_IMPUTATIONS_IDENTIFIERS+" ORDER BY entryAuthorization.year ASC")
 })
 public interface EntryAuthorizationByImputationsQuerier extends ByDimensionOneSystemIdentifierQuerier<EntryAuthorization,Imputation,String> {
 

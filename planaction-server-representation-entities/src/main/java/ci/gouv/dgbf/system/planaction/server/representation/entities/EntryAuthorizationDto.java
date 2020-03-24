@@ -1,6 +1,7 @@
 package ci.gouv.dgbf.system.planaction.server.representation.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class EntryAuthorizationDto extends AbstractAmountPlanningDto implements 
 	private static final long serialVersionUID = 1L;
 	
 	private ImputationDto imputation;
+	private ArrayList<PaymentCreditDto> paymentCredits;
 	private Long paymentCreditsAmountsCumulation;
 	
 	@Override
